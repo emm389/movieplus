@@ -1,2 +1,2 @@
-# movieplus
+# MoviePlus
 MoviePlus hiring test
