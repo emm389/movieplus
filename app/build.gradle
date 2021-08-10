@@ -14,6 +14,8 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner "com.android.test.runner.MultiDexTestRunner"
+
+        setProperty("archivesBaseName", "MoviePlus-$versionName")
     }
 
     buildTypes {
