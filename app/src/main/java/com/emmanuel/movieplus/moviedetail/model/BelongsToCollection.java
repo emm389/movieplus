@@ -1,6 +1,5 @@
 package com.emmanuel.movieplus.moviedetail.model;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -8,16 +7,13 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class BelongsToCollection {
-
-    @Expose
+    
     private int id;
-    @Expose
     private String name;
     @SerializedName("poster_path")
-    @Expose
     private String posterPath;
     @SerializedName("backdrop_path")
-    @Expose
+    
     private String backdropPath;
 
     public int getId() {

@@ -1,51 +1,61 @@
 package com.emmanuel.movieplus.movies.model;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+import java.util.Objects;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
 /**
  * Created by Emmanuel on 8/5/2021.
  */
 
+@Entity(tableName = "movie", indices = @Index(value = {"id"}, unique = true))
 public class Movie {
 
-    @Expose
+    @PrimaryKey
+    @ColumnInfo(name = "id")
+    private int id;
+    @ColumnInfo(name = "adult")
     private boolean adult;
     @SerializedName("backdrop_path")
-    @Expose
+    @ColumnInfo(name = "backdrop_path")
     private String backdropPath;
     @SerializedName("genre_ids")
-    @Expose
+    @ColumnInfo(name = "genre_ids")
     private List<Integer> genreIds = null;
-    @Expose
-    private int id;
     @SerializedName("original_language")
-    @Expose
+    @ColumnInfo(name = "original_language")
     private String originalLanguage;
     @SerializedName("original_title")
-    @Expose
+    @Ignore
     private String originalTitle;
-    @Expose
+    @ColumnInfo(name = "overview")
     private String overview;
-    @Expose
+    @Ignore
     private float popularity;
     @SerializedName("poster_path")
-    @Expose
+    @ColumnInfo(name = "poster_path")
     private String posterPath;
     @SerializedName("release_date")
-    @Expose
+    @ColumnInfo(name = "release_date")
     private String releaseDate;
-    @Expose
+    @ColumnInfo(name = "title")
     private String title;
-    @Expose
+    @Ignore
     private boolean video;
     @SerializedName("vote_average")
-    @Expose
+    @ColumnInfo(name = "vote_average")
     private float voteAverage;
     @SerializedName("vote_count")
-    @Expose
+    @Ignore
     private int voteCount;
 
     public boolean isAdult() {
@@ -158,5 +168,30 @@ public class Movie {
 
     public void setVoteCount(int voteCount) {
         this.voteCount = voteCount;
+    }
+
+    public static DiffUtil.ItemCallback<Movie> DIFF_CALLBACK = new DiffUtil.ItemCallback<Movie>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Movie oldItem, @NonNull Movie newItem) {
+            return oldItem.id == newItem.id;
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Movie oldItem, @NonNull Movie newItem) {
+            return oldItem.equals(newItem);
+        }
+    };
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Movie movie = (Movie) o;
+        return title.equals(movie.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title);
     }
 }

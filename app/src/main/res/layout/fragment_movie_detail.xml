@@ -63,101 +63,162 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/black"
+            android:fitsSystemWindows="true"
+            android:fillViewport="true"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="15dp"
+                android:padding="10dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="15dp"
-                    android:padding="10dp">
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/average"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableStart="@drawable/outline_star_24"
+                        android:drawablePadding="5dp"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_color"
+                        android:gravity="center_vertical"
+                        android:padding="5dp"/>
+
+                    <TextView
+                        android:id="@+id/year"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="12sp"
+                        android:gravity="center"
+                        android:textColor="@color/text_color"
+                        android:padding="5dp"/>
+
+                    <TextView
+                        android:id="@+id/duration"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="12sp"
+                        android:gravity="center"
+                        android:textColor="@color/text_color"
+                        android:padding="5dp"/>
+
+                    <TextView
+                        android:id="@+id/forAdults"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@color/red"
+                        android:textSize="12sp"
+                        android:text="@string/adultos"
+                        android:textColor="@color/white"
+                        android:fontFamily="sans-serif-medium"
+                        android:gravity="center"
+                        android:visibility="invisible"
+                        android:padding="5dp"/>
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2.4"/>
+                </LinearLayout>
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp">
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:id="@+id/contentGenres"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_gravity="center_vertical">
+                        android:orientation="horizontal"/>
+                </HorizontalScrollView>
 
-                        <TextView
-                            android:id="@+id/average"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:drawableStart="@drawable/outline_star_24"
-                            android:drawablePadding="5dp"
-                            android:textSize="12sp"
-                            android:textColor="@color/text_color"
-                            android:gravity="center_vertical"
-                            android:padding="5dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/overview"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_color"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:layout_marginTop="15dp"/>
 
-                        <TextView
-                            android:id="@+id/year"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textSize="12sp"
-                            android:gravity="center"
-                            android:textColor="@color/text_color"
-                            android:padding="5dp"/>
+                <TextView
+                    android:id="@+id/overview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:textColor="@color/text_color"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:fitsSystemWindows="true"/>
 
-                        <TextView
-                            android:id="@+id/forAdults"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:background="@color/red"
-                            android:textSize="12sp"
-                            android:text="@string/adultos"
-                            android:textColor="@color/white"
-                            android:fontFamily="sans-serif-medium"
-                            android:gravity="center"
-                            android:visibility="invisible"
-                            android:padding="5dp"/>
+                <TextView
+                    android:id="@+id/belongsToCollectionLbl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/belongs_to_collection"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_color"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:layout_marginTop="15dp"/>
 
-                        <Space
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="2.5"/>
-                    </LinearLayout>
+                <ImageView
+                    android:id="@+id/movieImageBelongs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center_horizontal"
+                    android:contentDescription="@null"
+                    android:layout_marginTop="10dp"/>
 
-                    <HorizontalScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp">
+                <TextView
+                    android:id="@+id/nameBelongs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/text_color"
+                    android:textSize="11sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:padding="5dp"/>
 
-                        <LinearLayout
-                            android:id="@+id/contentGenres"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"/>
-                    </HorizontalScrollView>
+                <TextView
+                    android:id="@+id/trailers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/trailers_amp_videos"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_color"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:layout_marginTop="15dp"/>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/overview"
-                        android:textSize="14sp"
-                        android:textColor="@color/text_color"
-                        android:fontFamily="sans-serif-medium"
-                        android:gravity="center"
-                        android:padding="5dp"
-                        android:layout_marginTop="15dp"/>
-
-                    <TextView
-                        android:id="@+id/overview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="13sp"
-                        android:textColor="@color/text_color"
-                        android:fontFamily="sans-serif-medium"
-                        android:gravity="center"
-                        android:padding="10dp"/>
-                </LinearLayout>
-            </RelativeLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/contentVideos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    android:overScrollMode="never"
+                    android:fitsSystemWindows="true"
+                    android:layout_marginTop="10dp"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

@@ -1,4 +1,7 @@
-package com.emmanuel.movieplus.network;
+package com.emmanuel.movieplus.di.modules;
+
+import com.emmanuel.movieplus.network.ApiService;
+import com.emmanuel.movieplus.network.UrlManager;
 
 import javax.inject.Singleton;
 

@@ -4,18 +4,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.emmanuel.movieplus.R;
 import com.emmanuel.movieplus.databinding.FragmentMoviesBinding;
 import com.emmanuel.movieplus.movies.adapters.MoviesAdapter;
-import com.emmanuel.movieplus.util.AnimationLayoutManager;
-
-import java.util.ArrayList;
+import com.emmanuel.movieplus.util.SlideUpAlphaAnimator;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.TransitionInflater;
 
@@ -29,6 +28,7 @@ public class MoviesFragment extends Fragment {
     private MoviesViewModel moviesViewModel;
     private FragmentMoviesBinding binding;
     public MoviesAdapter adapter;
+    private String category;
 
     public static MoviesFragment newInstance(String category) {
         MoviesFragment fragment = new MoviesFragment();
@@ -42,7 +42,7 @@ public class MoviesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         moviesViewModel = new ViewModelProvider(this).get(MoviesViewModel.class);
-        String category = "Popular";
+        category = "Popular";
         if (getArguments() != null) {
             category = getArguments().getString(ARG_SECTION_NUMBER);
         }
@@ -50,7 +50,7 @@ public class MoviesFragment extends Fragment {
         TransitionInflater inflater = TransitionInflater.from(requireContext());
         setExitTransition(inflater.inflateTransition(R.transition.fade));
 
-        moviesViewModel.getMovies(category);
+        moviesViewModel.getMovies(category, false);
     }
 
     @Override
@@ -62,26 +62,53 @@ public class MoviesFragment extends Fragment {
         View root = binding.getRoot();
         binding.setLifecycleOwner(this);
 
-        RecyclerView moviesList = binding.movies;
-        RecyclerView.LayoutManager manager = new AnimationLayoutManager(getContext());
-        moviesList.setLayoutManager(manager);
-        moviesList.setHasFixedSize(true);
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
+        binding.movies.setLayoutManager(manager);
+        binding.movies.setHasFixedSize(true);
+        binding.movies.setItemAnimator(new SlideUpAlphaAnimator());
 
-        adapter = new MoviesAdapter(this, new ArrayList<>());
-        moviesList.setAdapter(adapter);
+        adapter = new MoviesAdapter(this);
+        binding.movies.setAdapter(adapter);
 
-        moviesViewModel.getMoviesResponseObserver().observe(
-                getViewLifecycleOwner(),
-                movieResponse -> {
-                    adapter.setMovieList(movieResponse.getResults());
-                    moviesList.scheduleLayoutAnimation();
-                });
+        showMovies();
 
-        moviesViewModel.getServerResponseObserver().observe(
-                getViewLifecycleOwner(),
-                response -> Toast.makeText(getContext(), response, Toast.LENGTH_LONG).show()
-        );
+        initSearch();
         return root;
+    }
+
+    private void initSearch() {
+        binding.search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                binding.progress.setVisibility(View.VISIBLE);
+                adapter.submitList(null);
+                moviesViewModel.getMovies(binding.search.getQuery().toString(), true);
+                showMovies();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.isEmpty()) {
+                    moviesViewModel.getMovies(category, false);
+                    showMovies();
+                    return false;
+                }
+                return true;
+            }
+        });
+    }
+
+    private void showMovies() {
+        adapter.submitList(null);
+        moviesViewModel.getListLiveData().observe(
+                getViewLifecycleOwner(),
+                movies -> {
+                    binding.progress.setVisibility(View.GONE);
+                    adapter.submitList(movies);
+                    binding.movies.scheduleLayoutAnimation();
+                });
     }
 
     @Override

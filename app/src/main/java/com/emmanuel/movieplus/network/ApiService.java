@@ -21,5 +21,8 @@ public interface ApiService {
     Single<MovieResponse> getTopRatedMovies(@Query("api_key") String apiKey, @Query("page") int page);
 
     @GET(UrlManager.GET_MOVIE_DETAIL)
-    Single<MovieDetail> getMovieDetail(@Path("movie_id") int movieId, @Query("api_key") String apiKey);
+    Single<MovieDetail> getMovieDetail(@Path("movie_id") int movieId, @Query("api_key") String apiKey, @Query("append_to_response") String appendResponse);
+
+    @GET(UrlManager.SEARCH_MOVIE)
+    Single<MovieResponse> searchMovie(@Query("api_key") String apiKey, @Query("query") String query, @Query("page") int page);
 }

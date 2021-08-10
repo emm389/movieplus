@@ -8,15 +8,37 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".movies.fragment.MoviesFragment"
-        android:animateLayoutChanges="true">
+        android:animateLayoutChanges="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_search_textview"
+            android:textSize="14sp"
+            app:theme="@style/SearchViewStyle"
+            app:iconifiedByDefault="false"
+            android:layout_margin="10dp"
+            app:queryHint="@string/search"
+            android:nextFocusUp="@id/search"
+            android:nextFocusLeft="@id/search"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/movies"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:overScrollMode="never"
-            android:layoutAnimation="@anim/layout_animation"
+            android:layout_below="@+id/search"
+            android:layout_marginTop="5dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:indeterminate="true"
+            android:layout_centerInParent="true"/>
     </RelativeLayout>
 </layout>

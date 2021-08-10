@@ -1,78 +1,87 @@
 package com.emmanuel.movieplus.moviedetail.model;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
 /**
  * Created by Emmanuel on 8/5/2021.
  */
 
+@Entity(tableName = "movie_detail", indices = @Index(value = {"id"}, unique = true))
 public class MovieDetail {
 
-    @Expose
+    @PrimaryKey
+    @ColumnInfo(name = "id")
+    private int id;
+    @ColumnInfo(name = "adult")
     private boolean adult;
     @SerializedName("backdrop_path")
-    @Expose
+    @ColumnInfo(name = "backdrop_path")
     private String backdropPath;
     @SerializedName("belongs_to_collection")
-    @Expose
+    @ColumnInfo(name = "belongs_to_collection")
     private BelongsToCollection belongsToCollection;
-    @Expose
+    @Ignore
     private int budget;
-    @Expose
+    @ColumnInfo(name = "genres")
     private List<Genre> genres = null;
-    @Expose
+    @Ignore
     private String homepage;
-    @Expose
-    private int id;
     @SerializedName("imdb_id")
-    @Expose
+    @Ignore
     private String imdbId;
     @SerializedName("original_language")
-    @Expose
+    @Ignore
     private String originalLanguage;
     @SerializedName("original_title")
-    @Expose
+    @Ignore
     private String originalTitle;
-    @Expose
+    @ColumnInfo(name = "overview")
     private String overview;
-    @Expose
+    @Ignore
     private float popularity;
     @SerializedName("poster_path")
-    @Expose
+    @ColumnInfo(name = "poster_path")
     private String posterPath;
     @SerializedName("production_companies")
-    @Expose
+    @Ignore
     private List<ProductionCompany> productionCompanies = null;
     @SerializedName("production_countries")
-    @Expose
+    @Ignore
     private List<ProductionCountry> productionCountries = null;
     @SerializedName("release_date")
-    @Expose
+    @ColumnInfo(name = "release_date")
     private String releaseDate;
-    @Expose
+    @Ignore
     private int revenue;
-    @Expose
+    @ColumnInfo(name = "runtime")
     private int runtime;
     @SerializedName("spoken_languages")
-    @Expose
+    @Ignore
     private List<SpokenLanguage> spokenLanguages = null;
-    @Expose
+    @Ignore
     private String status;
-    @Expose
+    @Ignore
     private String tagline;
-    @Expose
+    @ColumnInfo(name = "title")
     private String title;
-    @Expose
+    @Ignore
     private boolean video;
     @SerializedName("vote_average")
-    @Expose
+    @ColumnInfo(name = "vote_average")
     private float voteAverage;
     @SerializedName("vote_count")
-    @Expose
+    @Ignore
     private int voteCount;
+    @ColumnInfo(name = "videos")
+    private Videos videos;
 
     public boolean isAdult() {
         return adult;
@@ -272,5 +281,13 @@ public class MovieDetail {
 
     public void setVoteCount(int voteCount) {
         this.voteCount = voteCount;
+    }
+
+    public Videos getVideos() {
+        return videos;
+    }
+
+    public void setVideos(Videos videos) {
+        this.videos = videos;
     }
 }

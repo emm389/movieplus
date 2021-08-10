@@ -15,42 +15,36 @@ import com.emmanuel.movieplus.movies.fragment.MoviesFragment;
 import com.emmanuel.movieplus.movies.model.Movie;
 import com.emmanuel.movieplus.network.UrlManager;
 
-import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by Emmanuel on 8/5/2021.
  */
 
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder> {
+public class MoviesAdapter extends PagedListAdapter<Movie, MoviesAdapter.MovieViewHolder> {
 
-    private MoviesFragment context;
-    private List<Movie> movieList;
+    private final MoviesFragment context;
     private final RequestOptions requestOptions;
 
-    public MoviesAdapter(MoviesFragment context, List<Movie> movieList) {
+    public MoviesAdapter(MoviesFragment context) {
+        super(Movie.DIFF_CALLBACK);
         this.context = context;
-        this.movieList = movieList;
 
         requestOptions = new RequestOptions()
                 .centerCrop()
                 .placeholder(R.drawable.progress_anim)
                 .error(R.mipmap.ic_launcher)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .priority(Priority.HIGH)
+                .priority(Priority.NORMAL)
                 .dontAnimate()
                 .dontTransform();
-    }
-
-    public void setMovieList(List<Movie> movieList) {
-        int oldSize = this.movieList.size();
-        this.movieList.addAll(movieList);
-        this.notifyItemRangeInserted(oldSize, movieList.size());
     }
 
     @NonNull
@@ -61,12 +55,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
-        holder.onBind(movieList.get(position));
-    }
-
-    @Override
-    public int getItemCount() {
-        return movieList.size();
+        holder.onBind(Objects.requireNonNull(getItem(position)));
     }
 
     class MovieViewHolder extends RecyclerView.ViewHolder {
@@ -88,7 +77,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
             binding.title.setText(movie.getTitle());
             binding.votes.setText(String.valueOf(movie.getVoteAverage()));
             binding.description.setText(movie.getOverview());
-            binding.releaseDate.setText(movie.getReleaseDate().split("-")[0]);
+
+            if (movie.getReleaseDate() != null)
+                binding.releaseDate.setText(movie.getReleaseDate().split("-")[0]);
+
             binding.forAdults.setVisibility(movie.isAdult() ? View.VISIBLE : View.GONE);
 
             binding.contentMovie.setOnClickListener(view -> {

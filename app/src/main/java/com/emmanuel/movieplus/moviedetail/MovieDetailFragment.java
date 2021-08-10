@@ -6,13 +6,16 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.TransitionInflater;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
@@ -20,12 +23,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.emmanuel.movieplus.R;
 import com.emmanuel.movieplus.databinding.FragmentMovieDetailBinding;
+import com.emmanuel.movieplus.moviedetail.adapters.VideoAdapter;
 import com.emmanuel.movieplus.moviedetail.model.Genre;
 import com.emmanuel.movieplus.moviedetail.model.MovieDetail;
+import com.emmanuel.movieplus.moviedetail.model.Video;
 import com.emmanuel.movieplus.network.UrlManager;
 
 import java.util.List;
-import java.util.zip.Inflater;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,6 +42,7 @@ public class MovieDetailFragment extends Fragment {
     private int movieId;
     private FragmentMovieDetailBinding binding;
     private MovieDetailViewModel movieDetailViewModel;
+    private RequestOptions requestOptions;
 
     public MovieDetailFragment() {
         // Required empty public constructor
@@ -76,6 +81,14 @@ public class MovieDetailFragment extends Fragment {
         };
 
         requireActivity().getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback);
+
+        requestOptions = new RequestOptions()
+                .placeholder(R.drawable.progress_anim)
+                .error(R.mipmap.ic_launcher)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .priority(Priority.HIGH)
+                .dontAnimate()
+                .dontTransform();
     }
 
     @Override
@@ -91,22 +104,12 @@ public class MovieDetailFragment extends Fragment {
                         .remove(MovieDetailFragment.this)
                         .commit());
 
-        movieDetailViewModel.getMoviesResponseObserver().observe(getViewLifecycleOwner(), this::showInfo);
-
-        movieDetailViewModel.getServerResponseObserver()
-                .observe(getViewLifecycleOwner(), s -> Toast.makeText(requireContext(), s, Toast.LENGTH_LONG).show());
+        movieDetailViewModel.getMovieDetailResponseObserver().observe(getViewLifecycleOwner(), this::showInfo);
 
         return binding.getRoot();
     }
 
     private void showInfo(MovieDetail movieDetail) {
-        RequestOptions requestOptions = new RequestOptions()
-                .placeholder(R.drawable.progress_anim)
-                .error(R.mipmap.ic_launcher)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .priority(Priority.HIGH)
-                .dontAnimate()
-                .dontTransform();
         Glide.with(requireContext())
                 .load(UrlManager.BASE_IMAGE_URL + "/w500" + movieDetail.getBackdropPath())
                 .apply(requestOptions)
@@ -115,10 +118,27 @@ public class MovieDetailFragment extends Fragment {
         binding.collapingToolbar.setTitle(movieDetail.getTitle());
         binding.average.setText(String.valueOf(movieDetail.getVoteAverage()));
         binding.year.setText(movieDetail.getReleaseDate().split("-")[0]);
+        String duration = movieDetail.getRuntime() + " min.";
+        binding.duration.setText(duration);
         binding.overview.setText(movieDetail.getOverview());
         binding.forAdults.setVisibility(movieDetail.isAdult() ? View.VISIBLE : View.INVISIBLE);
 
-        loadGenres(movieDetail.getGenres());
+        if (movieDetail.getBelongsToCollection() != null) {
+            Glide.with(requireContext())
+                    .load(UrlManager.BASE_IMAGE_URL + "/w200" + movieDetail.getBelongsToCollection().getPosterPath())
+                    .apply(requestOptions)
+                    .into(binding.movieImageBelongs);
+            binding.nameBelongs.setText(movieDetail.getBelongsToCollection().getName());
+        } else {
+            binding.movieImageBelongs.setVisibility(View.GONE);
+            binding.nameBelongs.setVisibility(View.GONE);
+            binding.belongsToCollectionLbl.setVisibility(View.GONE);
+        }
+
+        new Handler().postDelayed(() -> {
+            loadGenres(movieDetail.getGenres());
+            loadVideos(movieDetail.getVideos().getResults());
+        }, 500);
     }
 
     private void loadGenres(List<Genre> genreList) {
@@ -130,5 +150,24 @@ public class MovieDetailFragment extends Fragment {
 
             binding.contentGenres.addView(view);
         }
+    }
+
+    private void loadVideos(List<Video> videos) {
+        if (videos.isEmpty()) {
+            binding.trailers.setVisibility(View.GONE);
+            return;
+        }
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(requireContext());
+        binding.contentVideos.setLayoutManager(manager);
+        binding.contentVideos.setItemAnimator(new DefaultItemAnimator());
+
+        VideoAdapter adapter = new VideoAdapter(requireContext(), videos);
+        binding.contentVideos.setAdapter(adapter);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

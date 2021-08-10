@@ -8,7 +8,7 @@
         <item name="colorPrimaryVariant">@color/purple_200</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondary">@color/purple_200</item>
         <item name="colorSecondaryVariant">@color/white</item>
         <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
@@ -38,5 +38,12 @@
     <style name="Theme.MoviePlus.CustomTextAppearance" parent="TextAppearance.Design.CollapsingToolbar.Expanded">
         <item name="android:textSize">25sp</item>
         <item name="fontFamily">sans-serif-black</item>
+    </style>
+
+    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:editTextColor">@color/text_color</item>
+        <item name="android:textColorHint">@color/text_color</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 </resources>

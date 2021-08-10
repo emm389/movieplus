@@ -12,4 +12,5 @@
     <color name="red">#E91E1E</color>
     <color name="space_gray">#191919</color>
     <color name="text_color">#BFBFBF</color>
+    <color name="text_color_search">#EDEDED</color>
 </resources>
